@@ -32,3 +32,11 @@
 - Frontmatter обязательные поля: `title`, `description`, `pubDate`
 - Поле `tags` — массив строк (например: `['supermicro', 'gpu-servers', 'epyc']`)
 - Константы сайта (`SITE_TITLE`, `SITE_DESCRIPTION`) — в `src/consts.ts`, не хардкодить
+
+## Git Conventions
+– Commits: Conventional Commits format.
+– Types: feat, fix, docs, refactor, test, chore.
+– Format: type(scope): description.
+– Max subject line: 72 characters.
+– Branch naming: type/short-description.
+– PRs: always target "develop" (или "main", в зависимости от проекта).
