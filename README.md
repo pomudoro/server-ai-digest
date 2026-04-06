@@ -1,14 +1,14 @@
-# AI Digest
+# AI Server Digest
 
-Автоматический дайджест новостей AI, машинного обучения и больших языковых моделей.
+Дайджест новостей о серверном оборудовании для AI: GPU-серверы, AI-рабочие станции, HPC-платформы для обучения и инференса моделей. Supermicro, Dell, HPE, NVIDIA и другие производители.
 
 Проект курса **Claude Code Basics**. На протяжении восьми ступеней этот блог превращается из пустого шаблона в полностью автоматический пайплайн публикации.
 
 ## Быстрый старт
 
 ```bash
-git clone <url-репозитория> ai-digest
-cd ai-digest
+git clone <url-репозитория> ai-server-digest
+cd ai-server-digest
 npm install
 npm run dev
 ```
@@ -44,7 +44,7 @@ src/
 title: 'Заголовок статьи'
 description: 'Краткое описание в 2–3 предложения.'
 pubDate: '2026-03-25'
-tags: ['llm', 'anthropic']
+tags: ['supermicro', 'nvidia', 'gpu-servers']
 source: 'https://example.com/original-article'
 ---
 

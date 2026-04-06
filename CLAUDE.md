@@ -2,21 +2,24 @@
 
 ## Project
 
-Дайджест новостей про серверное оборудование (bare metal): физические серверы Supermicro, Dell, HP и других производителей. Astro 6 static blog, TypeScript, деплой на Vercel. Контент на русском языке.
+Дайджест новостей про серверное оборудование для AI (bare metal AI infrastructure): GPU-серверы, AI-рабочие станции, HPC-платформы для обучения и инференса. Supermicro, Dell, HPE, NVIDIA и другие производители. Astro 6 static blog, TypeScript, деплой на Vercel. Контент на русском языке.
 
 ## Тематика
 
-- Серверные платформы: rack, blade, tower, GPU-серверы
-- Компоненты: процессоры (Xeon, EPYC), память, NVMe, сетевые карты, BMC/IPMI
-- Производители: Supermicro, Dell, HPE, Lenovo, Inspur, ASUS Server
-- Рынок: новые линейки, сертификации, поставки, дата-центры
+- AI-серверы и платформы: GPU-серверы, AI workstations, HPC-кластеры, rack, tower
+- GPU и ускорители: NVIDIA (Blackwell, Hopper, Grace), AMD Instinct, Intel Gaudi
+- Компоненты AI-платформ: HBM-память, NVLink, NVSwitch, InfiniBand, ConnectX, PCIe 5.0/6.0, жидкостное охлаждение
+- Процессоры: NVIDIA Grace (ARM), AMD EPYC, Intel Xeon — в контексте AI-нагрузок
+- Производители: Supermicro, Dell, HPE, Lenovo, NVIDIA, ASUS Server, Inspur
+- Сценарии: обучение LLM, файнтюнинг, инференс, Multi-Instance GPU, AI on-premise
+- Рынок: новые AI-платформы, сертификации NVIDIA, поставки, AI-дата-центры
 
 ## Стиль статей
 
-- Язык: русский. Английские термины оставлять как есть (bare metal, rack unit, hot-swap, BMC)
+- Язык: русский. Английские термины оставлять как есть (bare metal, inference, fine-tuning, HBM, NVLink, hot-swap, BMC)
 - Объём: 300–500 слов
-- Тон: информативный, без маркетинга. Факты и характеристики важнее эмоций
-- Аудитория: инженеры, сисадмины, IT-закупщики, devops, предприниматели, собственники малого бизнеса
+- Тон: информативный, без маркетинга. Факты, характеристики и бенчмарки важнее эмоций
+- Аудитория: ML-инженеры, DevOps/MLOps, сисадмины AI-кластеров, IT-закупщики, CTO стартапов, исследователи, предприниматели, собственники малого бизнеса
 - Ссылка на первоисточник обязательна (поле `source` во frontmatter)
 
 ## Commands
@@ -34,6 +37,7 @@
 - Константы сайта (`SITE_TITLE`, `SITE_DESCRIPTION`) — в `src/consts.ts`, не хардкодить
 
 ## Git Conventions
+
 – Commits: Conventional Commits format.
 – Types: feat, fix, docs, refactor, test, chore.
 – Format: type(scope): description.
