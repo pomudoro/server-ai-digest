@@ -39,6 +39,190 @@ const today = new Date();
 		</a>
 	</div>
 </footer>
+
+<!-- Search overlay (Ctrl+K / Cmd+K) -->
+<div id="search-overlay" class="search-overlay">
+	<div class="search-backdrop"></div>
+	<div class="search-modal" role="dialog" aria-modal="true" aria-label="Поиск">
+		<div class="search-input-wrap">
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+			<input type="search" id="search-input" placeholder="Поиск по статьям..." />
+			<kbd>ESC</kbd>
+		</div>
+		<div class="search-filters" id="search-filters"></div>
+		<div class="search-results" id="search-results"></div>
+	</div>
+</div>
+
+<script is:inline>
+(function () {
+	const overlay = document.getElementById('search-overlay');
+	const backdrop = overlay.querySelector('.search-backdrop');
+	const input = document.getElementById('search-input');
+	const filtersEl = document.getElementById('search-filters');
+	const resultsEl = document.getElementById('search-results');
+
+	let pagefind = null;
+	let debounceTimer = null;
+	let activeTags = new Set();
+	let selectedIndex = -1;
+
+	async function loadPagefind() {
+		if (pagefind) return pagefind;
+		try {
+			pagefind = await import('/pagefind/pagefind.js');
+			return pagefind;
+		} catch {
+			return null;
+		}
+	}
+
+	async function renderFilters() {
+		const pf = await loadPagefind();
+		if (!pf) return;
+		const filters = await pf.filters();
+		const tags = filters.tag || {};
+		filtersEl.innerHTML = '';
+		for (const [name, count] of Object.entries(tags)) {
+			const chip = document.createElement('span');
+			chip.className = 'tag' + (activeTags.has(name) ? ' active' : '');
+			chip.textContent = name;
+			chip.setAttribute('role', 'checkbox');
+			chip.setAttribute('aria-checked', activeTags.has(name));
+			chip.setAttribute('tabindex', '0');
+			chip.addEventListener('click', () => toggleTag(name));
+			chip.addEventListener('keydown', (e) => {
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault();
+					toggleTag(name);
+				}
+			});
+			filtersEl.appendChild(chip);
+		}
+	}
+
+	function toggleTag(name) {
+		if (activeTags.has(name)) {
+			activeTags.delete(name);
+		} else {
+			activeTags.add(name);
+		}
+		renderFilters();
+		doSearch();
+	}
+
+	async function doSearch() {
+		const pf = await loadPagefind();
+		if (!pf) {
+			resultsEl.innerHTML = '<div class="search-results-empty">Индекс поиска недоступен</div>';
+			return;
+		}
+		const query = input.value.trim();
+		const hasFilters = activeTags.size > 0;
+
+		if (!query && !hasFilters) {
+			resultsEl.innerHTML = '';
+			selectedIndex = -1;
+			return;
+		}
+
+		const filters = hasFilters ? { tag: { any: Array.from(activeTags) } } : {};
+		const search = await pf.search(query || null, { filters });
+
+		if (search.results.length === 0) {
+			resultsEl.innerHTML = '<div class="search-results-empty">Ничего не найдено</div>';
+			selectedIndex = -1;
+			return;
+		}
+
+		const items = await Promise.all(search.results.slice(0, 15).map(r => r.data()));
+		resultsEl.innerHTML = items.map((item, i) =>
+			`<div class="search-result">
+				<a href="${item.url}" data-index="${i}">
+					<p class="result-title">${item.meta?.title || item.url}</p>
+					<p class="result-excerpt">${item.excerpt || ''}</p>
+				</a>
+			</div>`
+		).join('');
+		selectedIndex = -1;
+	}
+
+	function updateSelection() {
+		const links = resultsEl.querySelectorAll('.search-result a');
+		links.forEach((a, i) => {
+			a.setAttribute('data-selected', i === selectedIndex ? 'true' : 'false');
+		});
+		if (selectedIndex >= 0 && links[selectedIndex]) {
+			links[selectedIndex].scrollIntoView({ block: 'nearest' });
+		}
+	}
+
+	function openSearch() {
+		overlay.classList.add('active');
+		document.body.style.overflow = 'hidden';
+		input.value = '';
+		resultsEl.innerHTML = '';
+		selectedIndex = -1;
+		renderFilters();
+		requestAnimationFrame(() => input.focus());
+	}
+
+	function closeSearch() {
+		overlay.classList.remove('active');
+		document.body.style.overflow = '';
+		activeTags.clear();
+	}
+
+	// Keyboard: Ctrl+K / Cmd+K to open
+	document.addEventListener('keydown', (e) => {
+		if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+			e.preventDefault();
+			if (!overlay.classList.contains('active')) {
+				openSearch();
+			} else {
+				closeSearch();
+			}
+		}
+		if (e.key === 'Escape' && overlay.classList.contains('active')) {
+			e.preventDefault();
+			closeSearch();
+		}
+	});
+
+	// Search button in header
+	var searchBtn = document.getElementById('search-btn');
+	if (searchBtn) searchBtn.addEventListener('click', openSearch);
+
+	// Backdrop click
+	backdrop.addEventListener('click', closeSearch);
+
+	// Search input
+	input.addEventListener('input', () => {
+		clearTimeout(debounceTimer);
+		debounceTimer = setTimeout(doSearch, 200);
+	});
+
+	// Arrow navigation in results
+	input.addEventListener('keydown', (e) => {
+		const links = resultsEl.querySelectorAll('.search-result a');
+		if (!links.length) return;
+
+		if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			selectedIndex = Math.min(selectedIndex + 1, links.length - 1);
+			updateSelection();
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			selectedIndex = Math.max(selectedIndex - 1, -1);
+			updateSelection();
+		} else if (e.key === 'Enter' && selectedIndex >= 0 && links[selectedIndex]) {
+			e.preventDefault();
+			links[selectedIndex].click();
+		}
+	});
+})();
+</script>
+
 <style>
 	footer {
 		padding: 2em 1em 6em 1em;

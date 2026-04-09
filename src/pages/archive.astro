@@ -1,0 +1,262 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const postsByYear = new Map<number, typeof posts>();
+for (const post of posts) {
+	const year = post.data.pubDate.getFullYear();
+	if (!postsByYear.has(year)) postsByYear.set(year, []);
+	postsByYear.get(year)!.push(post);
+}
+
+const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
+
+const pageTitle = `Архив — ${SITE_TITLE}`;
+const pageDescription = 'Архив всех публикаций AI Digest';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={pageTitle} description={pageDescription} />
+		<style>
+			main {
+				width: 960px;
+			}
+			.archive h1 {
+				margin-bottom: 0.25rem;
+			}
+			.post-count {
+				color: rgb(var(--gray));
+				font-size: 0.9em;
+				margin-bottom: 1.5rem;
+			}
+			.archive-filters {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4em;
+				margin-bottom: 2rem;
+				padding-bottom: 1rem;
+				border-bottom: 1px solid rgb(var(--gray-light));
+			}
+			.filter-chip {
+				cursor: pointer;
+				border: none;
+				font-family: "Atkinson", sans-serif;
+				transition: background 0.15s, color 0.15s;
+				user-select: none;
+			}
+			.filter-chip:hover {
+				background: rgb(var(--gray));
+				color: #fff;
+			}
+			.filter-chip.active {
+				background: var(--accent);
+				color: #fff;
+			}
+			.year-heading {
+				margin-top: 1.5rem;
+				margin-bottom: 0.75rem;
+				padding-bottom: 0.25rem;
+				border-bottom: 2px solid var(--accent);
+				font-size: 1.563em;
+			}
+			.archive-list {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			.archive-item {
+				display: flex;
+				gap: 1rem;
+				padding: 0.75rem 0;
+				border-bottom: 1px solid rgb(var(--gray-light));
+				align-items: flex-start;
+			}
+			.archive-item:last-child {
+				border-bottom: none;
+			}
+			.archive-item-thumb {
+				flex-shrink: 0;
+				width: 120px;
+			}
+			.archive-item-thumb img {
+				border-radius: 6px;
+				display: block;
+			}
+			.archive-item-content {
+				flex: 1;
+				min-width: 0;
+			}
+			.archive-date {
+				font-size: 0.75em;
+				color: rgb(var(--gray));
+			}
+			.archive-title {
+				display: block;
+				font-weight: 700;
+				font-size: 1.05em;
+				color: rgb(var(--black));
+				text-decoration: none;
+				line-height: 1.3;
+				margin: 0.15rem 0;
+			}
+			.archive-title:hover {
+				color: var(--accent);
+			}
+			.archive-desc {
+				font-size: 0.8em;
+				color: rgb(var(--gray-dark));
+				margin: 0.25rem 0 0.4rem;
+				line-height: 1.5;
+			}
+			.archive-item .tags {
+				margin-top: 0.3rem;
+			}
+			.year-group.hidden,
+			.archive-item.hidden {
+				display: none;
+			}
+			@media (max-width: 720px) {
+				.archive-item {
+					flex-direction: column;
+					gap: 0.5rem;
+				}
+				.archive-item-thumb {
+					width: 100%;
+				}
+				.archive-item-thumb img {
+					width: 100%;
+					height: auto;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="archive">
+				<h1>Архив</h1>
+				<p class="post-count">
+					Всего публикаций: <span id="post-count">{posts.length}</span>
+				</p>
+
+				{allTags.length > 0 && (
+					<div class="archive-filters" id="archive-filters">
+						{allTags.map(tag => (
+							<button class="tag filter-chip" data-tag={tag} type="button">
+								{tag}
+							</button>
+						))}
+					</div>
+				)}
+
+				{[...postsByYear.entries()].map(([year, yearPosts]) => (
+					<div class="year-group" data-year={year}>
+						<h2 class="year-heading">{year}</h2>
+						<ul class="archive-list">
+							{yearPosts.map(post => (
+								<li class="archive-item" data-tags={post.data.tags.join(',')}>
+									<div class="archive-item-thumb">
+										{post.data.heroImage && (
+											<a href={`/blog/${post.id}/`}>
+												<Image
+													width={120}
+													height={60}
+													src={post.data.heroImage}
+													alt=""
+												/>
+											</a>
+										)}
+									</div>
+									<div class="archive-item-content">
+										<span class="archive-date">
+											<FormattedDate date={post.data.pubDate} />
+										</span>
+										<a href={`/blog/${post.id}/`} class="archive-title">
+											{post.data.title}
+										</a>
+										<p class="archive-desc">{post.data.description}</p>
+										{post.data.tags.length > 0 && (
+											<div class="tags">
+												{post.data.tags.map(tag => (
+													<span class="tag">{tag}</span>
+												))}
+											</div>
+										)}
+									</div>
+								</li>
+							))}
+						</ul>
+					</div>
+				))}
+			</section>
+		</main>
+		<Footer />
+		<script is:inline>
+		(function () {
+			var chips = document.querySelectorAll('.filter-chip');
+			var items = document.querySelectorAll('.archive-item');
+			var yearGroups = document.querySelectorAll('.year-group');
+			var countEl = document.getElementById('post-count');
+			var totalCount = items.length;
+			var activeTag = null;
+
+			function update() {
+				var visibleCount = 0;
+				items.forEach(function (item) {
+					if (!activeTag) {
+						item.classList.remove('hidden');
+						visibleCount++;
+					} else {
+						var itemTags = (item.getAttribute('data-tags') || '').split(',');
+						if (itemTags.indexOf(activeTag) !== -1) {
+							item.classList.remove('hidden');
+							visibleCount++;
+						} else {
+							item.classList.add('hidden');
+						}
+					}
+				});
+				yearGroups.forEach(function (group) {
+					var visible = group.querySelectorAll('.archive-item:not(.hidden)');
+					if (visible.length === 0) {
+						group.classList.add('hidden');
+					} else {
+						group.classList.remove('hidden');
+					}
+				});
+				if (countEl) {
+					countEl.textContent = activeTag
+						? visibleCount + ' / ' + totalCount
+						: String(totalCount);
+				}
+			}
+
+			chips.forEach(function (chip) {
+				chip.addEventListener('click', function () {
+					var tag = chip.getAttribute('data-tag');
+					if (activeTag === tag) {
+						activeTag = null;
+						chip.classList.remove('active');
+					} else {
+						chips.forEach(function (c) { c.classList.remove('active'); });
+						activeTag = tag;
+						chip.classList.add('active');
+					}
+					update();
+				});
+			});
+		})();
+		</script>
+	</body>
+</html>
