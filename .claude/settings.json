@@ -1,6 +1,5 @@
 {
   "permissions": {
-    "defaultMode": "acceptEdits",
     "allow": [
       "Bash(npm *)",
       "Bash(git status*)",
@@ -8,9 +7,6 @@
       "Bash(git log*)",
       "Bash(git add *)",
       "Bash(git commit *)"
-    ],
-    "ask": [
-      "Bash(git push *)"
     ],
     "deny": [
       "Bash(rm -rf *)",
@@ -25,6 +21,13 @@
       "Read(.env*)",
       "Read(**/.env*)",
       "Read(./secrets/**)"
-    ]
+    ],
+    "ask": [
+      "Bash(git push *)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true
   }
 }

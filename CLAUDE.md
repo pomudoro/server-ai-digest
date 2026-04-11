@@ -38,6 +38,46 @@
 - Поле `tags` — массив строк (например: `['supermicro', 'gpu-servers', 'epyc']`)
 - Константы сайта (`SITE_TITLE`, `SITE_DESCRIPTION`) — в `src/consts.ts`, не хардкодить
 
+## Digest Pipeline
+
+Автоматический пайплайн генерации статей: `npm run digest`.
+
+Точка входа: `scripts/digest.ts`. Модули: `scripts/lib/`.
+
+### Стадии
+
+1. **Config** — загрузка .env (TAVILY_API_KEY, ANTHROPIC_API_KEY, REPLICATE_API_TOKEN)
+2. **Dedup** — чтение source URL из существующих постов
+3. **Search** — поиск новостей через Tavily (topic: news, days: 7)
+4. **Select** — Claude отбирает 3-5 тем из результатов
+5. **Write** — Claude пишет статьи (claude-sonnet-4-5, structured output)
+6. **Cover** — Replicate FLUX-schnell генерирует обложки (16:9, WebP)
+7. **Publish** — git branch, commit, push, PR через gh CLI
+
+### Критерии отбора новостей
+
+Приоритет:
+- Запуск новых серверных продуктов и платформ
+- Значимые бенчмарки и тесты производительности
+- Крупные анонсы вендоров (Supermicro, Dell, HPE, NVIDIA, Lenovo)
+- Новые GPU/ускорители, сертификации NVIDIA
+- Жидкостное охлаждение, NVLink, InfiniBand — значимые обновления
+
+Исключить:
+- Мелкие обновления прошивок и драйверов
+- Спекуляции и утечки без подтверждения
+- Маркетинговые пресс-релизы без технических деталей
+- Чисто финансовые новости (акции, выручка)
+- Новости старше 7 дней
+
+### Редполитика дайджеста
+
+- Каждая статья — обзор одной конкретной новости
+- Обязательна ссылка на первоисточник (поле `source`)
+- Дедупликация по URL источника — не писать о том, что уже есть в блоге
+- Slug: латиница, lowercase, только `[a-z0-9-]`, до 60 символов
+- Обложки сохраняются в `src/assets/digest/{YYYY-MM-DD}/{slug}.webp`
+
 ## Git Conventions
 
 – Commits: Conventional Commits format.
