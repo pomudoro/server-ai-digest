@@ -3,7 +3,9 @@
     "allow": [
       "Bash(MSYS_NO_PATHCONV=1 ctx7 docs:*)",
       "Bash(npx ctx7@latest:*)",
-      "Bash(MSYS_NO_PATHCONV=1 npx ctx7@latest:*)"
+      "Bash(MSYS_NO_PATHCONV=1 npx ctx7@latest:*)",
+      "mcp__tavily-mcp__tavily_search",
+      "Bash(ctx7 library *)"
     ]
   }
 }
