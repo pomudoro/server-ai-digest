@@ -5,7 +5,8 @@
       "Bash(npx ctx7@latest:*)",
       "Bash(MSYS_NO_PATHCONV=1 npx ctx7@latest:*)",
       "mcp__tavily-mcp__tavily_search",
-      "Bash(ctx7 library *)"
+      "Bash(ctx7 library *)",
+      "mcp__tavily-mcp__tavily_extract"
     ]
   }
 }
