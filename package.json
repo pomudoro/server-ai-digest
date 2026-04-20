@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "digest": "tsx scripts/digest.ts"
+    "digest": "tsx scripts/digest.ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
@@ -22,7 +23,9 @@
   },
   "devDependencies": {
     "dotenv": "^17.4.1",
+    "prettier": "^3.8.3",
     "tsx": "^4.21.0",
+    "vitest": "^4.1.4",
     "zod": "^4.3.6"
   }
 }
