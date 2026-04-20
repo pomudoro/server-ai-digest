@@ -2,7 +2,7 @@
 title: "Supermicro выпускает компактные edge AI-серверы на AMD EPYC 4005"
 description: "Три форм-фактора — mini-1U, short-depth 1U и slim tower — для инференса на краю сети. Zen 5, TDP от 65 Вт, DDR5, PCIe Gen 5 и опциональные GPU-ускорители."
 pubDate: "2026-04-20"
-cover: "../../assets/digest/2026-04-20/supermicro-epyc-4005-edge-ai-compact.webp"
+heroImage: "../../assets/digest/2026-04-20/supermicro-epyc-4005-edge-ai-compact.webp"
 tags: ["supermicro", "amd", "epyc", "edge-ai", "inference", "zen5"]
 source: "https://www.hpcwire.com/off-the-wire/supermicro-introduces-compact-energy-efficient-systems-to-accelerate-adoption-of-intelligent-edge-ai/"
 ---
