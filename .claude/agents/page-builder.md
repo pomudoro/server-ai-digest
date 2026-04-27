@@ -19,15 +19,16 @@ model: sonnet
 2. Прочитай `.claude/rules/git-workflow.md` — формат коммита и веток.
 3. Запусти локальную сборку: `npm run build`.
    - Если падает — НЕ коммить, верни вывод ошибки наверх.
-4. Создай ветку выпуска: `git checkout -b digest/YYYY-MM-DD`.
+4. Подбери имя ветки выпуска `<branch>`. По умолчанию — `digest/YYYY-MM-DD`. Если такая ветка уже существует (проверь локально через `git rev-parse --verify` и на origin через `git ls-remote --heads origin`), добавь числовой суффикс: `digest/YYYY-MM-DD-2`, `-3` и т.д., пока не получишь свободное имя. Несколько выпусков в один день — норма. Создай ветку и переключись на неё: `git checkout -b <branch>`.
 5. Добавь и закоммить новые файлы:
    - `git add src/content/blog/ src/assets/digest/`
-   - `git commit -m "feat(digest): AI digest for YYYY-MM-DD"`
-6. Запушь ветку: `git push -u origin digest/YYYY-MM-DD`.
+   - `git commit -m "feat(digest): AI digest for YYYY-MM-DD"` (если ветка с суффиксом, можно дописать его в скобках, например `... for YYYY-MM-DD (part 2)`).
+6. Запушь ветку: `git push -u origin <branch>`.
 7. Открой PR через gh CLI. Важно: у репо два remote (`origin` = твой fork `pomudoro/server-ai-digest`, `upstream` = исходный). Без `--repo` gh откроет PR в upstream — это неправильно. Всегда указывай `--repo pomudoro/server-ai-digest`:
    ```
-   gh pr create --repo pomudoro/server-ai-digest --base main --head digest/YYYY-MM-DD \
+   gh pr create --repo pomudoro/server-ai-digest --base main --head <branch> \
      --title "feat(digest): дайджест YYYY-MM-DD" \
      --body "<маркированный список статей со ссылками на первоисточники>"
    ```
+   Если за день уже есть открытый PR, добавь к title пометку «(часть 2)» и т.д., чтобы PR-листинг читался.
 8. Верни URL созданного PR. Прод-деплой произойдёт после merge — самостоятельно мержить PR не нужно.
