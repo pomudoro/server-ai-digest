@@ -1,50 +1,47 @@
 #!/bin/bash
-# Stop-хук: валидация статьи перед завершением.
-# Проверяет наличие заголовка, описания, обложки и ссылки на источник.
-# Exit 0 = разрешить завершение. Exit 2 = продолжить работу.
+# PreToolUse-хук: валидация статьи перед `git commit`.
+# Срабатывает на любой Bash, фильтрует только команды `git commit*`.
+# Проверяет staged md-файлы в src/content/blog/ на обязательные поля frontmatter.
+# Exit 0 = разрешить tool. Exit 2 = заблокировать tool, stderr виден Claude.
 
-# Защита от бесконечного цикла: stop_hook_active.
-# При повторном вызове (Claude уже пытался завершить и был заблокирован) — разрешаем.
-ACTIVE=$(jq -r '.stop_hook_active' 2>/dev/null)
-if [ "$ACTIVE" = "true" ]; then
+INPUT=$(cat)
+
+TOOL_NAME=$(printf '%s' "$INPUT" | jq -r '.tool_name' 2>/dev/null)
+if [ "$TOOL_NAME" != "Bash" ]; then
   exit 0
 fi
 
-# Ищем последний изменённый markdown-файл в content/
-# (адаптируйте путь под структуру вашего проекта)
-ARTICLE=$(find src/content/blog/ -name "*.md" -newer .git/index 2>/dev/null | head -1)
+CMD=$(printf '%s' "$INPUT" | jq -r '.tool_input.command' 2>/dev/null)
+if ! [[ "$CMD" =~ ^[[:space:]]*git[[:space:]]+commit([[:space:]]|$) ]]; then
+  exit 0
+fi
 
-# Если статьи нет — это не цикл публикации, разрешаем завершение
-if [ -z "$ARTICLE" ]; then
+ARTICLES=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null | grep -E '^src/content/blog/.*\.md$' || true)
+if [ -z "$ARTICLES" ]; then
   exit 0
 fi
 
 ERRORS=""
+while IFS= read -r ARTICLE; do
+  [ -z "$ARTICLE" ] && continue
+  [ -f "$ARTICLE" ] || continue
 
-# Проверка: заголовок (строка "title:" в frontmatter)
-if ! grep -q "^title:" "$ARTICLE" 2>/dev/null; then
-  ERRORS="${ERRORS}Missing title. "
-fi
+  if ! grep -q "^title:" "$ARTICLE"; then
+    ERRORS="${ERRORS}${ARTICLE}: missing title. "
+  fi
+  if ! grep -q "^description:" "$ARTICLE"; then
+    ERRORS="${ERRORS}${ARTICLE}: missing description. "
+  fi
+  if ! grep -qE "^(cover|image|heroImage):" "$ARTICLE"; then
+    ERRORS="${ERRORS}${ARTICLE}: missing cover image. "
+  fi
+  if ! grep -qE "(^source:|https?://)" "$ARTICLE"; then
+    ERRORS="${ERRORS}${ARTICLE}: missing source link. "
+  fi
+done <<< "$ARTICLES"
 
-# Проверка: описание (строка "description:" в frontmatter)
-if ! grep -q "^description:" "$ARTICLE" 2>/dev/null; then
-  ERRORS="${ERRORS}Missing description. "
-fi
-
-# Проверка: обложка (строка "cover:", "image:" или "heroImage:" в frontmatter)
-if ! grep -qE "^(cover|image|heroImage):" "$ARTICLE" 2>/dev/null; then
-  ERRORS="${ERRORS}Missing cover image. "
-fi
-
-# Проверка: ссылка на источник (строка "source:" в frontmatter или URL в тексте)
-if ! grep -qE "(^source:|https?://)" "$ARTICLE" 2>/dev/null; then
-  ERRORS="${ERRORS}Missing source link. "
-fi
-
-# Если есть ошибки — блокируем завершение
 if [ -n "$ERRORS" ]; then
   echo "Article validation failed: ${ERRORS}" >&2
-  echo "File: $ARTICLE" >&2
   exit 2
 fi
 

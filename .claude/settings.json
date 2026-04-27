@@ -7,8 +7,16 @@
       "Bash(git log*)",
       "Bash(git add *)",
       "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(gh pr create *)",
+      "Write(src/content/**)",
+      "Write(src/assets/digest/**)",
       "WebFetch(*)",
-      "WebSearch(*)"
+      "WebSearch(*)",
+      "Edit(src/content/**)",
+      "mcp__tavily-mcp__*",
+      "mcp__replicate__*"
     ],
     "deny": [
       "Bash(rm -rf *)",
@@ -24,7 +32,6 @@
       "Read(**/.env*)",
       "Read(./secrets/**)"
     ],
-    "ask": ["Bash(git push *)"],
     "defaultMode": "acceptEdits"
   },
   "enabledPlugins": {
@@ -49,13 +56,7 @@
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/block-dangerous.sh\""
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
+          },
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-article.sh\""
