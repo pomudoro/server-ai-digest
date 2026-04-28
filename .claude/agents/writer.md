@@ -1,7 +1,10 @@
 ---
 name: writer
 description: Пишет статьи для AI-дайджеста по отобранным новостям. Следует редполитике из .claude/rules/article-style.md. Создаёт MD-файлы в src/content/blog/.
-tools: Read, Write, Edit, Grep, Glob
+tools: Read, Write, Edit, Grep, Glob,
+  ToolSearch,
+  SendMessage,
+  TaskCreate, TaskGet, TaskList, TaskUpdate
 model: sonnet
 ---
 

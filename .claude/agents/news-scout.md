@@ -1,7 +1,11 @@
 ---
 name: news-scout
 description: Ищет новости через Tavily. Фильтрует по редполитике из .claude/rules/article-style.md и дедуплицирует по URL против существующих постов. Возвращает отобранные новости.
-tools: Read, Grep, Glob
+tools: Read, Grep, Glob,
+  ToolSearch,
+  SendMessage,
+  TaskCreate, TaskGet, TaskList, TaskUpdate,
+  mcp__tavily-mcp__tavily_search, mcp__tavily-mcp__tavily_extract
 model: sonnet
 mcpServers:
   - tavily-mcp

@@ -1,7 +1,10 @@
 ---
 name: page-builder
 description: Финализирует выпуск дайджеста — локальная сборка, ветка, коммит, PR через gh CLI. Ждёт сигнала от cover-artist, что все обложки готовы.
-tools: Read, Write, Edit, Bash, Grep, Glob
+tools: Read, Write, Edit, Bash, Grep, Glob,
+  ToolSearch,
+  SendMessage,
+  TaskCreate, TaskGet, TaskList, TaskUpdate
 model: sonnet
 ---
 

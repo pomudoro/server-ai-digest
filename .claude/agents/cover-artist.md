@@ -1,7 +1,11 @@
 ---
 name: cover-artist
 description: Генерирует обложки для статей дайджеста через Replicate. Получает задачи через сообщения от writer. Кладёт изображения в src/assets/digest/ и обновляет heroImage в frontmatter.
-tools: Read, Write, Edit, Bash
+tools: Read, Write, Edit, Bash,
+  ToolSearch,
+  SendMessage,
+  TaskCreate, TaskGet, TaskList, TaskUpdate,
+  mcp__replicate__create_models_predictions, mcp__replicate__get_predictions, mcp__replicate__download_files
 model: sonnet
 mcpServers:
   - replicate
