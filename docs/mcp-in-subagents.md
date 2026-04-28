@@ -195,25 +195,37 @@ gh pr create --repo pomudoro/server-ai-digest --base main --head digest/YYYY-MM-
 
 ## Сообщение для Telegram (преподавателю)
 
-> **MCP в подагентах Claude Code: что выяснилось**
->
-> Прогнал две конфигурации в Claude Code 2.1.121 на Windows 11 + Git Bash и в WSL Ubuntu + tmux. В обоих вариантах одинаковое поведение
->
-> 1. MCP-инструменты нормально вызываются внутри обычных subagent через прямой `Agent({...})` dispatch (foreground и background режим).
->    , если во frontmatter указано:
->
-> ```yaml
-> tools: <базовые инструменты, БЕЗ MCP-имён и БЕЗ wildcard>
-> mcpServers:
->   - <имя MCP сервера ровно как ключ в .mcp.json>
-> ```
->
-> **2. Agent Teams (`TeamCreate` + `Agent({..., team_name, name})`).**
-> Поле `mcpServers:` во frontmatter **игнорируется** — это явно сказано в официальной доке и подтверждается опытами. Чтобы teammate в команде имел доступ к MCP, **а также к остальным инструментам — включая, как ни странно, `SendMessage` и `TaskCreate/Get/List/Update`**, есть только два варианта:
->
-> - либо прописать всё это явно в `tools:` (полные имена MCP-инструментов — например, `mcp__tavily-mcp__tavily_search`, `mcp__replicate__create_models_predictions` — плюс `ToolSearch`, `SendMessage`, все четыре `Task*`),
-> - либо вообще удалить `tools:` из frontmatter — тогда teammate унаследует полный дефолтный набор + MCP из `.mcp.json` через `ToolSearch`.
->
-> Wildcard `mcp__server__*` в `tools:` молча схлопывает whitelist в 0 — не использовать.
->
-> Это противоречит формулировке официальной доки про «`SendMessage` and the task management tools are always available» — на практике в team mode они режутся точно так же, как и любой другой инструмент, не указанный в `tools:`.
+**В ДЗ_7 возник затык с вызовом MCP в subagents**
+
+Пробовал в Claude Code 2.1.121 как на Windows 11 так и в WSL Ubuntu + tmux. В обоих вариантах одинаковое поведение.
+
+1. MCP-инструменты нормально вызываются внутри обычных subagent через прямой `Agent({...})` dispatch (foreground и background режим), при условии что во frontmatter subagent указано:
+
+```yaml
+tools: <базовые инструменты, БЕЗ MCP-имён и БЕЗ wildcard>
+mcpServers:
+  - <имя MCP сервера ровно как ключ в .mcp.json>
+```
+
+например
+```yaml
+name: cover-artist
+description: Генерирует обложки для статей дайджеста через Replicate. Получает задачи через сообщения от writer. Кладёт изображения в src/assets/digest/ и обновляет heroImage в frontmatter.
+tools: Read, Write, Edit, Bash,
+model: sonnet
+mcpServers:
+  - replicate
+```
+
+**2. Agent Teams (`TeamCreate` + `Agent({..., team_name, name})`).**
+С Agent Teams конфиг из пункта 1 у меня не заработал. Поле `mcpServers:` во frontmatter **игнорируется** (в доке это тоже написано). Чтобы teammate в команде имел доступ к MCP, **а также к остальным инструментам — включая, как ни странно, `SendMessage` и `TaskCreate/Get/List/Update`**, у меня получилось этого добиться только двумя способами:
+
+- либо прописать всё это явно в `tools:` (полные имена MCP-инструментов — например, `mcp__tavily-mcp__tavily_search`, `mcp__replicate__create_models_predictions` — плюс `ToolSearch`, `SendMessage`, все четыре `Task*`),
+- либо вообще удалить `tools:` из frontmatter — тогда teammate унаследует полный набор + MCP из `.mcp.json` через `ToolSearch`.
+
+Wildcard `mcp__server__*` в `tools:` у меня не работает. 
+
+В официальной доке сказано «`SendMessage` and the task management tools are always available» — на практике в team mode они режутся точно так же, как и любой другой инструмент, не указанный в `tools:`.
+
+Если же tools прописаны (и не содержат имен mcp и toolsearch, SendMessage), то teammate пытается вызвать mcp (tavily или replicate), у него не получается и team-lead делает это за него. Тоже самое с отправкой сообщений между teammates - попытка падает и teamlead отправляет сообщеие teammate вместо другого teammate. Даже в таком режиме задача выполнена, но не так как ожидается. 
+
