@@ -195,7 +195,7 @@ gh pr create --repo pomudoro/server-ai-digest --base main --head digest/YYYY-MM-
 
 ## Сообщение для Telegram (преподавателю)
 
-**В ДЗ_7 возник затык с вызовом MCP в subagents**
+В ДЗ_7 возник затык с вызовом MCP в subagents.
 
 Пробовал в Claude Code 2.1.121 как на Windows 11 так и в WSL Ubuntu + tmux. В обоих вариантах одинаковое поведение.
 
