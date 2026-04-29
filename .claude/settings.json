@@ -47,6 +47,15 @@
             "command": "jq -r '.tool_input.file_path | gsub(\"\\\\\\\\\"; \"/\")' | xargs npx prettier --write 2>/dev/null; exit 0"
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/pipeline-log.sh\""
+          }
+        ]
       }
     ],
     "PreToolUse": [
