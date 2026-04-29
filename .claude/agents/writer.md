@@ -27,3 +27,8 @@ model: sonnet
 `Generate cover: slug=<slug>, title="<title>", date=<YYYY-MM-DD>`
 
 Дата (`date`) — это значение `pubDate` статьи; cover-artist использует её для пути обложки.
+
+После того как отправил последний `Generate cover: ...`, отправь cover-artist отдельное сообщение:
+`All articles sent, <N> total`
+
+где `<N>` — общее число статей в выпуске. Это явный сигнал, что новых запросов на обложки не будет; без него cover-artist не знает, когда отчитываться page-builder.

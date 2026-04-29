@@ -32,5 +32,8 @@ mcpServers:
   ```
   **Важно:** путь относительный от папки статьи. Абсолютный `src/...` не пройдёт схему Astro content collection и сломает сборку.
 
-3. После того как все обложки готовы — сообщи page-builder:
-   `Covers ready, <N> total`
+3. Жди от writer сообщение `All articles sent, <N> total` — это явный сигнал, что новых `Generate cover: ...` не будет. Сверь, что обработал ровно `<N>` обложек. Только после этого:
+   - отправь page-builder сообщение `Covers ready, <N> total`;
+   - закрой свою задачу через TaskUpdate (status=completed).
+
+   Не отправляй триггер page-builder и не закрывай задачу, пока не пришёл `All articles sent`, даже если кажется, что обложки уже все. Это известная точка сбоя.
