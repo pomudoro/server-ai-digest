@@ -1,7 +1,7 @@
 ---
 name: digest
 description: Coordinate Agent Team (news-scout, writer, cover-artist, page-builder) to ship a digest issue
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 Создай Agent Team (не просто subagents, а именно Agent Teams) для сборки нового выпуска дайджеста.
