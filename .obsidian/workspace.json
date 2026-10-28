@@ -1,0 +1,212 @@
+{
+  "main": {
+    "id": "8b1abd7388c0dacb",
+    "type": "split",
+    "children": [
+      {
+        "id": "1af45979bdb62dcb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7e6ac280ae860c67",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "article/server-ai-digest-portfolio.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "server-ai-digest-portfolio"
+            }
+          },
+          {
+            "id": "4a2346fc66faf657",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "article/review/server-ai-digest-portfolio-review.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "server-ai-digest-portfolio-review"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "4e421e2a40205503",
+    "type": "split",
+    "children": [
+      {
+        "id": "e657820a1da136cf",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "56c0077343e3bdd6",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "1dee8119e9255cc6",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "db5b28bfc63078a1",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "1354efae9350593e",
+    "type": "split",
+    "children": [
+      {
+        "id": "4d535125ca795df4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e0f750456780a945",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "article/server-ai-digest-portfolio.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for server-ai-digest-portfolio"
+            }
+          },
+          {
+            "id": "aca0302489729b0b",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "article/server-ai-digest-portfolio.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from server-ai-digest-portfolio"
+            }
+          },
+          {
+            "id": "b2e516f33403abce",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "62cb205415bbd16b",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "93cffcb5787e7ed6",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "article/server-ai-digest-portfolio.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of server-ai-digest-portfolio"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "7e6ac280ae860c67",
+  "lastOpenFiles": [
+    "krrkt-final.json",
+    "krrkt-after.json",
+    "article/server-ai-digest-portfolio (a copy from the computer NB-ROG16) (2).md",
+    "article/server-ai-digest-portfolio.source.md",
+    "krrkt-baseline.json",
+    "article/server-ai-digest-portfolio (a copy from the computer NB-ROG16).md",
+    "article/aritcle-syle-antipatterns.md",
+    "article/review/server-ai-digest-portfolio-review.md",
+    "article/server-ai-digest-portfolio.md"
+  ]
+}
