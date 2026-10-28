@@ -23,3 +23,6 @@ logs/
 
 # jetbrains setting folder
 .idea/
+
+# local Claude Code settings
+.claude/settings.local.json
